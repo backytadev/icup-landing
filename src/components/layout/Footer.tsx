@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Link, useLocation } from 'react-router-dom';
 import {
   Facebook,
   Instagram,
@@ -16,16 +17,56 @@ const socialLinks = [
   { icon: Youtube, href: '#', label: 'YouTube' },
 ];
 
-const quickLinks = [
+interface QuickLink {
+  name: string;
+  href: string;
+  isRoute?: boolean;
+}
+
+const quickLinks: QuickLink[] = [
   { name: 'Inicio', href: '#inicio' },
   { name: 'Nosotros', href: '#nosotros' },
   { name: 'Servicios', href: '#servicios' },
+  { name: 'Calendario', href: '/calendario', isRoute: true },
   { name: 'Ubicación', href: '#ubicacion' },
   { name: 'Contacto', href: '#contacto' },
 ];
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const location = useLocation();
+  const isCalendarPage = location.pathname === '/calendario';
+
+  const renderQuickLink = (link: QuickLink) => {
+    if (link.isRoute) {
+      return (
+        <li key={link.name}>
+          <Link
+            to={link.href}
+            className="text-white/80 hover:text-gold-400 transition-colors text-sm"
+          >
+            <motion.span whileHover={{ x: 4 }} className="inline-block">
+              {link.name}
+            </motion.span>
+          </Link>
+        </li>
+      );
+    }
+
+    const href = isCalendarPage ? `/${link.href}` : link.href;
+
+    return (
+      <li key={link.name}>
+        <motion.a
+          href={href}
+          className="text-white/80 hover:text-gold-400 transition-colors text-sm"
+          whileHover={{ x: 4 }}
+        >
+          {link.name}
+        </motion.a>
+      </li>
+    );
+  };
 
   return (
     <footer className="bg-primary-950 text-white pt-6 md:pt-10 relative z-10 overflow-hidden">
@@ -40,14 +81,16 @@ export default function Footer() {
               viewport={{ once: true }}
               className="flex items-center gap-3 mb-6"
             >
-              <div className="relative w-14 h-14 flex items-center justify-center">
-                <div className="absolute inset-0 bg-gold-500 rounded-full" />
-                <Church className="w-7 h-7 text-white relative z-10" />
-              </div>
-              <div>
-                <h3 className="font-heading font-bold text-xl">ICUP</h3>
-                <p className="text-white/80 text-sm">Unidos en su Presencia</p>
-              </div>
+              <Link to="/" className="flex items-center gap-3">
+                <div className="relative w-14 h-14 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-gold-500 rounded-full" />
+                  <Church className="w-7 h-7 text-white relative z-10" />
+                </div>
+                <div>
+                  <h3 className="font-heading font-bold text-xl">ICUP</h3>
+                  <p className="text-white/80 text-sm">Unidos en su Presencia</p>
+                </div>
+              </Link>
             </motion.div>
             <p className="text-white/80 text-sm leading-relaxed mb-6">
               Anunciando las buenas nuevas de salvación al mundo. Una comunidad
@@ -74,19 +117,7 @@ export default function Footer() {
             <h4 className="font-heading font-semibold text-lg mb-6">
               Enlaces Rápidos
             </h4>
-            <ul className="space-y-3">
-              {quickLinks.map((link) => (
-                <li key={link.name}>
-                  <motion.a
-                    href={link.href}
-                    className="text-white/80 hover:text-gold-400 transition-colors text-sm"
-                    whileHover={{ x: 4 }}
-                  >
-                    {link.name}
-                  </motion.a>
-                </li>
-              ))}
-            </ul>
+            <ul className="space-y-3">{quickLinks.map(renderQuickLink)}</ul>
           </div>
 
           {/* Contact Info */}

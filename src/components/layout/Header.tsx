@@ -1,11 +1,19 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Church } from 'lucide-react';
 
-const navLinks = [
+interface NavLink {
+  name: string;
+  href: string;
+  isRoute?: boolean;
+}
+
+const navLinks: NavLink[] = [
   { name: 'Inicio', href: '#inicio' },
   { name: 'Nosotros', href: '#nosotros' },
   { name: 'Servicios', href: '#servicios' },
+  { name: 'Calendario', href: '/calendario', isRoute: true },
   { name: 'Ubicación', href: '#ubicacion' },
   { name: 'Contacto', href: '#contacto' },
 ];
@@ -13,6 +21,10 @@ const navLinks = [
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const isCalendarPage = location.pathname === '/calendario';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +33,94 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleNavClick = (link: NavLink) => {
+    setIsMobileMenuOpen(false);
+
+    if (link.isRoute) {
+      return; // Let the Link component handle it
+    }
+
+    // If we're on the calendar page and clicking an anchor, navigate home first
+    if (isCalendarPage && link.href.startsWith('#')) {
+      navigate('/' + link.href);
+    }
+  };
+
+  const renderNavLink = (link: NavLink, isMobile = false) => {
+    const baseClasses = isMobile
+      ? `font-bold text-lg py-3 border-b transition-colors ${
+          isScrolled
+            ? 'text-primary-900 border-primary-100 hover:text-primary-600'
+            : 'text-white border-white/10 hover:text-gold-400'
+        } last:border-0`
+      : `font-semibold text-sm tracking-wide transition-all shadow-sm ${
+          isScrolled
+            ? 'text-primary-900 hover:text-primary-600'
+            : 'text-white hover:text-gold-400 drop-shadow-md'
+        }`;
+
+    const isActive = link.isRoute && location.pathname === link.href;
+    const activeClasses = isActive
+      ? isScrolled
+        ? 'text-primary-600'
+        : 'text-gold-400'
+      : '';
+
+    if (link.isRoute) {
+      return (
+        <Link
+          key={link.name}
+          to={link.href}
+          className={`${baseClasses} ${activeClasses}`}
+          onClick={() => setIsMobileMenuOpen(false)}
+        >
+          {isMobile ? (
+            link.name
+          ) : (
+            <motion.span
+              className="inline-block"
+              whileHover={{ y: -2 }}
+              whileTap={{ y: 0 }}
+            >
+              {link.name}
+            </motion.span>
+          )}
+        </Link>
+      );
+    }
+
+    // For anchor links
+    const href = isCalendarPage ? `/${link.href}` : link.href;
+
+    if (isMobile) {
+      return (
+        <motion.a
+          key={link.name}
+          href={href}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className={baseClasses}
+          onClick={() => handleNavClick(link)}
+        >
+          {link.name}
+        </motion.a>
+      );
+    }
+
+    return (
+      <motion.a
+        key={link.name}
+        href={href}
+        className={baseClasses}
+        whileHover={{ y: -2 }}
+        whileTap={{ y: 0 }}
+        onClick={() => handleNavClick(link)}
+      >
+        {link.name}
+      </motion.a>
+    );
+  };
 
   return (
     <motion.header
@@ -33,62 +133,64 @@ export default function Header() {
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
-        <motion.a
-          href="#inicio"
-          className="flex items-center gap-3"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <div className="relative w-12 h-12 flex items-center justify-center">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary-600 to-primary-700 rounded-full" />
-            <Church className="w-6 h-6 text-gold-400 relative z-10" />
-          </div>
-          <div className="hidden sm:block">
-            <h1
-              className={`font-heading font-black text-xl leading-tight drop-shadow-sm ${
-                isScrolled ? 'text-primary-900' : 'text-white'
-              }`}
-            >
-              ICUP
-            </h1>
-            <p
-              className={`text-[10px] font-bold uppercase tracking-widest ${
-                isScrolled ? 'text-primary-600' : 'text-white'
-              }`}
-            >
-              Unidos en su Presencia
-            </p>
-          </div>
-        </motion.a>
+        <Link to="/" className="flex items-center gap-3">
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex items-center gap-3"
+          >
+            <div className="relative w-12 h-12 flex items-center justify-center">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary-600 to-primary-700 rounded-full" />
+              <Church className="w-6 h-6 text-gold-400 relative z-10" />
+            </div>
+            <div className="hidden sm:block">
+              <h1
+                className={`font-heading font-black text-xl leading-tight drop-shadow-sm ${
+                  isScrolled ? 'text-primary-900' : 'text-white'
+                }`}
+              >
+                ICUP
+              </h1>
+              <p
+                className={`text-[10px] font-bold uppercase tracking-widest ${
+                  isScrolled ? 'text-primary-600' : 'text-white'
+                }`}
+              >
+                Unidos en su Presencia
+              </p>
+            </div>
+          </motion.div>
+        </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <motion.a
-              key={link.name}
-              href={link.href}
-              className={`font-semibold text-sm tracking-wide transition-all shadow-sm ${
-                isScrolled
-                  ? 'text-primary-900 hover:text-primary-600'
-                  : 'text-white hover:text-gold-400 drop-shadow-md'
-              }`}
-              whileHover={{ y: -2 }}
-              whileTap={{ y: 0 }}
-            >
-              {link.name}
-            </motion.a>
-          ))}
+          {navLinks.map((link) => renderNavLink(link))}
         </nav>
 
         {/* CTA Button */}
-        <motion.a
-          href="#contacto"
-          className="hidden lg:block btn-gold text-sm"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Únete a nosotros
-        </motion.a>
+        {isCalendarPage ? (
+          <Link
+            to="/#contacto"
+            className="hidden lg:block btn-gold text-sm"
+          >
+            <motion.span
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-block"
+            >
+              Únete a nosotros
+            </motion.span>
+          </Link>
+        ) : (
+          <motion.a
+            href="#contacto"
+            className="hidden lg:block btn-gold text-sm"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Únete a nosotros
+          </motion.a>
+        )}
 
         {/* Mobile Menu Button */}
         <button
@@ -124,32 +226,35 @@ export default function Header() {
           >
             <nav className="container mx-auto px-6 py-10 flex flex-col gap-6">
               {navLinks.map((link, index) => (
-                <motion.a
+                <motion.div
                   key={link.name}
-                  href={link.href}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className={`font-bold text-lg py-3 border-b transition-colors ${
-                    isScrolled
-                      ? 'text-primary-900 border-primary-100 hover:text-primary-600'
-                      : 'text-white border-white/10 hover:text-gold-400'
-                  } last:border-0`}
+                >
+                  {renderNavLink(link, true)}
+                </motion.div>
+              ))}
+              {isCalendarPage ? (
+                <Link
+                  to="/#contacto"
+                  className="btn-gold text-center mt-6 py-4 text-base shadow-lg"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  {link.name}
+                  Únete a nosotros
+                </Link>
+              ) : (
+                <motion.a
+                  href="#contacto"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="btn-gold text-center mt-6 py-4 text-base shadow-lg"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Únete a nosotros
                 </motion.a>
-              ))}
-              <motion.a
-                href="#contacto"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 }}
-                className="btn-gold text-center mt-6 py-4 text-base shadow-lg"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Únete a nosotros
-              </motion.a>
+              )}
             </nav>
           </motion.div>
         )}
