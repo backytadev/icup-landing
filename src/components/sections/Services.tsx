@@ -126,15 +126,15 @@ export default function Services() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-16 p-8 bg-gradient-to-r from-primary-600 to-primary-800 rounded-3xl text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl"
+          className="mt-16 p-6 md:p-8 bg-gradient-to-r from-primary-600 to-primary-800 rounded-3xl text-white flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 shadow-xl"
         >
-          <div className="flex items-center gap-6">
-            <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center shrink-0">
-              <Music size={32} />
+          <div className="flex flex-col md:flex-row items-center text-center md:text-left gap-4 md:gap-6">
+            <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-white/10 flex items-center justify-center shrink-0">
+              <Music size={24} className="md:w-8 md:h-8" />
             </div>
             <div>
               <h4 className="text-xl font-bold">Culto de Jóvenes</h4>
-              <p className="text-white/80">
+              <p className="text-white/80 text-sm md:text-base">
                 Todos los sábados de 6:00 PM a 8:00 PM. ¡Un tiempo dedicado a la
                 nueva generación!
               </p>
@@ -181,22 +181,22 @@ export default function Services() {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-lg bg-white rounded-[2.5rem] overflow-hidden shadow-2xl"
+              className="relative w-full max-w-lg bg-white rounded-[2.5rem] overflow-hidden shadow-2xl max-h-[90vh] flex flex-col"
             >
               {/* Header decorativo */}
-              <div className="h-32 bg-gradient-to-br from-primary-600 to-primary-800 p-8 flex items-end relative">
+              <div className="h-28 md:h-32 bg-gradient-to-br from-primary-600 to-primary-800 p-6 md:p-8 flex items-end relative shrink-0">
                 <button
                   onClick={() => setSelectedService(null)}
-                  className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+                  className="absolute top-4 md:top-6 right-4 md:right-6 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
                 >
                   <X size={20} />
                 </button>
                 <div className="flex items-center gap-4 text-white">
-                  <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
-                    <selectedService.icon size={28} />
+                  <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
+                    <selectedService.icon size={26} />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-black">
+                    <h3 className="text-xl md:text-2xl font-black">
                       {selectedService.title}
                     </h3>
                     <p className="text-white/80 text-sm font-medium">
@@ -207,7 +207,7 @@ export default function Services() {
               </div>
 
               {/* Contenido */}
-              <div className="p-8">
+              <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar">
                 <div className="flex items-center gap-3 text-primary-600 mb-6 bg-primary-50 p-3 rounded-2xl w-fit">
                   <Clock size={18} />
                   <span className="font-bold text-sm">
@@ -231,7 +231,7 @@ export default function Services() {
                       <h4 className="text-neutral-800 font-bold mb-3 uppercase tracking-wider text-xs">
                         Qué esperar
                       </h4>
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {selectedService.benefits.map((benefit, i) => (
                           <div
                             key={i}

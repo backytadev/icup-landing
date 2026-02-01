@@ -121,7 +121,7 @@ export default function Location() {
                 href="https://maps.app.goo.gl/KfPSheBZQxCGE1Ab9"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-primary w-full mt-10 flex items-center justify-center gap-2"
+                className="text-[14px] md:text-base btn-primary w-full mt-10 flex items-center justify-center gap-2"
               >
                 <Navigation size={18} />
                 Abrir en Google Maps
@@ -165,19 +165,19 @@ export default function Location() {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-lg bg-white rounded-[2.5rem] overflow-hidden shadow-2xl"
+              className="relative w-full max-w-lg bg-white rounded-[2.5rem] overflow-hidden shadow-2xl max-h-[90vh] flex flex-col"
             >
-              <div className="p-8">
+              <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar">
                 <div className="flex justify-between items-center mb-8">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-primary-50 flex items-center justify-center text-primary-600">
-                      <Navigation size={24} />
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-primary-50 flex items-center justify-center text-primary-600">
+                      <Navigation size={22} />
                     </div>
                     <div>
-                      <h3 className="text-xl font-black text-neutral-800">
+                      <h3 className="text-lg md:text-xl font-black text-neutral-800">
                         Cómo llegar a ICUP
                       </h3>
-                      <p className="text-neutral-500 text-xs font-bold uppercase tracking-wider">
+                      <p className="text-neutral-500 text-[10px] md:text-xs font-bold uppercase tracking-wider">
                         Tahuantinsuyo, Independencia
                       </p>
                     </div>
@@ -190,7 +190,7 @@ export default function Location() {
                   </button>
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-4 md:space-y-6">
                   {routes.map((route, i) => (
                     <div
                       key={i}
