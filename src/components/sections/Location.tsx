@@ -121,7 +121,7 @@ export default function Location() {
                 href="https://maps.app.goo.gl/KfPSheBZQxCGE1Ab9"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[14px] md:text-base btn-primary w-full mt-10 flex items-center justify-center gap-2"
+                className="btn-primary w-full mt-10 flex items-center justify-center gap-2"
               >
                 <Navigation size={18} />
                 Abrir en Google Maps

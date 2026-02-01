@@ -96,19 +96,19 @@ export default function Contact() {
                   className="drop-shadow-sm text-white"
                 />
               </div>
-              <h3 className="text-4xl font-extrabold mb-6 drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] text-gold-300 uppercase tracking-tight">
+              <h3 className="text-3xl md:text-4xl font-extrabold mb-6 drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] text-gold-300 uppercase tracking-tight">
                 Peticiones de Oración
               </h3>
-              <p className="text-white font-bold text-xl max-w-sm mb-10 leading-relaxed drop-shadow-lg">
+              <p className="text-white font-bold text-lg md:text-xl max-w-sm mb-10 leading-relaxed drop-shadow-lg">
                 "Durante nuestros cultos de oración, llevamos todas tus
                 peticiones ante el trono de la gracia."
               </p>
               <div className="flex flex-col items-center gap-4">
-                <p className="text-gold-300 font-black text-md drop-shadow-md italic">
+                <p className="text-gold-300 font-black text-sm md:text-md drop-shadow-md italic">
                   "Orad unos por otros, para que seáis sanados. La oración
                   eficaz del justo puede mucho..."
                 </p>
-                <span className="text-white/90 font-bold text-sm tracking-[0.2em] uppercase drop-shadow-sm">
+                <span className="text-white/90 font-bold text-xs md:text-sm tracking-[0.2em] uppercase drop-shadow-sm">
                   Santiago 5:16
                 </span>
 
