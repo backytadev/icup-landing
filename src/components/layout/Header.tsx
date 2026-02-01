@@ -1,21 +1,32 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Church } from 'lucide-react';
+import {
+  Menu,
+  X,
+  Church,
+  Home,
+  Users,
+  Clock,
+  Calendar,
+  MapPin,
+  Phone,
+  ChevronRight,
+} from 'lucide-react';
 
 interface NavLink {
   name: string;
   href: string;
   isRoute?: boolean;
+  icon: React.ElementType;
 }
 
 const navLinks: NavLink[] = [
-  { name: 'Inicio', href: '#inicio' },
-  { name: 'Nosotros', href: '#nosotros' },
-  { name: 'Servicios', href: '#servicios' },
-  { name: 'Calendario', href: '/calendario', isRoute: true },
-  { name: 'Ubicación', href: '#ubicacion' },
-  { name: 'Contacto', href: '#contacto' },
+  { name: 'Inicio', href: '#inicio', icon: Home },
+  { name: 'Nosotros', href: '#nosotros', icon: Users },
+  { name: 'Servicios', href: '#servicios', icon: Clock },
+  { name: 'Calendario', href: '/calendario', isRoute: true, icon: Calendar },
+  { name: 'Ubicación', href: '#ubicacion', icon: MapPin },
+  { name: 'Contacto', href: '#contacto', icon: Phone },
 ];
 
 export default function Header() {
@@ -30,35 +41,40 @@ export default function Header() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
 
   const handleNavClick = (link: NavLink) => {
     setIsMobileMenuOpen(false);
 
     if (link.isRoute) {
-      return; // Let the Link component handle it
+      return;
     }
 
-    // If we're on the calendar page and clicking an anchor, navigate home first
     if (isCalendarPage && link.href.startsWith('#')) {
       navigate('/' + link.href);
     }
   };
 
-  const renderNavLink = (link: NavLink, isMobile = false) => {
-    const baseClasses = isMobile
-      ? `font-bold text-lg py-3 border-b transition-colors ${
-          isScrolled
-            ? 'text-primary-900 border-primary-100 hover:text-primary-600'
-            : 'text-white border-white/10 hover:text-gold-400'
-        } last:border-0`
-      : `font-semibold text-sm tracking-wide transition-all shadow-sm ${
-          isScrolled
-            ? 'text-primary-900 hover:text-primary-600'
-            : 'text-white hover:text-gold-400 drop-shadow-md'
-        }`;
+  const renderDesktopNavLink = (link: NavLink) => {
+    const baseClasses = `font-semibold text-sm tracking-wide transition-colors md:hover:-translate-y-0.5 md:transition-transform ${
+      isScrolled
+        ? 'text-primary-900 hover:text-primary-600'
+        : 'text-white hover:text-gold-400 drop-shadow-md'
+    }`;
 
     const isActive = link.isRoute && location.pathname === link.href;
     const activeClasses = isActive
@@ -73,192 +89,205 @@ export default function Header() {
           key={link.name}
           to={link.href}
           className={`${baseClasses} ${activeClasses}`}
-          onClick={() => setIsMobileMenuOpen(false)}
         >
-          {isMobile ? (
-            link.name
-          ) : (
-            <motion.span
-              className="inline-block"
-              whileHover={{ y: -2 }}
-              whileTap={{ y: 0 }}
-            >
-              {link.name}
-            </motion.span>
-          )}
+          {link.name}
         </Link>
       );
     }
 
-    // For anchor links
     const href = isCalendarPage ? `/${link.href}` : link.href;
 
-    if (isMobile) {
-      return (
-        <motion.a
-          key={link.name}
-          href={href}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className={baseClasses}
-          onClick={() => handleNavClick(link)}
+    return (
+      <a
+        key={link.name}
+        href={href}
+        className={`${baseClasses} ${activeClasses}`}
+      >
+        {link.name}
+      </a>
+    );
+  };
+
+  const renderMobileNavLink = (link: NavLink) => {
+    const isActive = link.isRoute && location.pathname === link.href;
+    const Icon = link.icon;
+
+    const linkContent = (
+      <div
+        className={`flex items-center gap-4 px-4 py-4 rounded-2xl transition-all ${
+          isActive
+            ? 'bg-primary-600 text-white'
+            : 'bg-white/5 text-white hover:bg-white/10'
+        }`}
+      >
+        <div
+          className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+            isActive ? 'bg-white/20' : 'bg-white/10'
+          }`}
         >
-          {link.name}
-        </motion.a>
+          <Icon size={20} />
+        </div>
+        <span className="flex-1 font-semibold">{link.name}</span>
+        <ChevronRight
+          size={18}
+          className={isActive ? 'text-white/70' : 'text-white/40'}
+        />
+      </div>
+    );
+
+    if (link.isRoute) {
+      return (
+        <Link
+          key={link.name}
+          to={link.href}
+          onClick={() => setIsMobileMenuOpen(false)}
+        >
+          {linkContent}
+        </Link>
       );
     }
 
+    const href = isCalendarPage ? `/${link.href}` : link.href;
+
     return (
-      <motion.a
-        key={link.name}
-        href={href}
-        className={baseClasses}
-        whileHover={{ y: -2 }}
-        whileTap={{ y: 0 }}
-        onClick={() => handleNavClick(link)}
-      >
-        {link.name}
-      </motion.a>
+      <a key={link.name} href={href} onClick={() => handleNavClick(link)}>
+        {linkContent}
+      </a>
     );
   };
 
   return (
-    <motion.header
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'glass shadow-lg py-3' : 'bg-transparent py-5'
-      }`}
-    >
-      <div className="container mx-auto px-6 flex items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-3">
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="flex items-center gap-3"
-          >
-            <div className="relative w-12 h-12 flex items-center justify-center">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary-600 to-primary-700 rounded-full" />
-              <Church className="w-6 h-6 text-gold-400 relative z-10" />
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled ? 'glass shadow-lg py-3' : 'bg-transparent py-5'
+        }`}
+      >
+        <div className="container mx-auto px-6 flex items-center justify-between">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
+              <div className="relative w-12 h-12 flex items-center justify-center">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary-600 to-primary-700 rounded-full" />
+                <Church className="w-6 h-6 text-gold-400 relative z-10" />
+              </div>
+              <div className="hidden sm:block">
+                <h1
+                  className={`font-heading font-black text-xl leading-tight drop-shadow-sm ${
+                    isScrolled ? 'text-primary-900' : 'text-white'
+                  }`}
+                >
+                  ICUP
+                </h1>
+                <p
+                  className={`text-[10px] font-bold uppercase tracking-widest ${
+                    isScrolled ? 'text-primary-600' : 'text-white'
+                  }`}
+                >
+                  Unidos en su Presencia
+                </p>
+              </div>
             </div>
-            <div className="hidden sm:block">
-              <h1
-                className={`font-heading font-black text-xl leading-tight drop-shadow-sm ${
-                  isScrolled ? 'text-primary-900' : 'text-white'
-                }`}
-              >
-                ICUP
-              </h1>
-              <p
-                className={`text-[10px] font-bold uppercase tracking-widest ${
-                  isScrolled ? 'text-primary-600' : 'text-white'
-                }`}
-              >
-                Unidos en su Presencia
-              </p>
-            </div>
-          </motion.div>
-        </Link>
-
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-8">
-          {navLinks.map((link) => renderNavLink(link))}
-        </nav>
-
-        {/* CTA Button */}
-        {isCalendarPage ? (
-          <Link
-            to="/#contacto"
-            className="hidden lg:block btn-gold text-sm"
-          >
-            <motion.span
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-block"
-            >
-              Únete a nosotros
-            </motion.span>
           </Link>
-        ) : (
-          <motion.a
-            href="#contacto"
-            className="hidden lg:block btn-gold text-sm"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Únete a nosotros
-          </motion.a>
-        )}
 
-        {/* Mobile Menu Button */}
-        <button
-          className="lg:hidden p-2"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          {isMobileMenuOpen ? (
-            <X
-              className={isScrolled ? 'text-primary-700' : 'text-white'}
-              size={28}
-            />
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center gap-8">
+            {navLinks.map((link) => renderDesktopNavLink(link))}
+          </nav>
+
+          {/* CTA Button */}
+          {isCalendarPage ? (
+            <Link to="/#contacto" className="hidden lg:block btn-gold text-sm">
+              Únete a nosotros
+            </Link>
           ) : (
-            <Menu
-              className={isScrolled ? 'text-primary-700' : 'text-white'}
-              size={28}
-            />
+            <a href="#contacto" className="hidden lg:block btn-gold text-sm">
+              Únete a nosotros
+            </a>
           )}
-        </button>
-      </div>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className={`lg:hidden overflow-hidden ${
-              isScrolled ? 'glass' : 'glass-dark'
-            }`}
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden p-2 relative z-50"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
           >
-            <nav className="container mx-auto px-6 py-10 flex flex-col gap-6">
-              {navLinks.map((link, index) => (
-                <motion.div
-                  key={link.name}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  {renderNavLink(link, true)}
-                </motion.div>
-              ))}
-              {isCalendarPage ? (
-                <Link
-                  to="/#contacto"
-                  className="btn-gold text-center mt-6 py-4 text-base shadow-lg"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Únete a nosotros
-                </Link>
-              ) : (
-                <motion.a
-                  href="#contacto"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 }}
-                  className="btn-gold text-center mt-6 py-4 text-base shadow-lg"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Únete a nosotros
-                </motion.a>
-              )}
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.header>
+            {isMobileMenuOpen ? (
+              <X className="text-white" size={28} />
+            ) : (
+              <Menu
+                className={isScrolled ? 'text-primary-700' : 'text-white'}
+                size={28}
+              />
+            )}
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile Menu - Full Screen Overlay */}
+      <div
+        className={`lg:hidden fixed inset-0 z-40 transition-all duration-300 ${
+          isMobileMenuOpen
+            ? 'opacity-100 pointer-events-auto'
+            : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        {/* Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-800 via-primary-900 to-primary-950" />
+
+        {/* Decorative elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 -left-20 w-64 h-64 bg-gold-400/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-40 -right-20 w-80 h-80 bg-primary-400/10 rounded-full blur-3xl" />
+        </div>
+
+        {/* Content */}
+        <div
+          className={`relative h-full flex flex-col pt-24 pb-8 px-6 transition-transform duration-300 ${
+            isMobileMenuOpen ? 'translate-y-0' : '-translate-y-8'
+          }`}
+        >
+          {/* Logo and tagline */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-gold-400 to-gold-500 mb-4 shadow-lg shadow-gold-500/30">
+              <Church className="w-8 h-8 text-white" />
+            </div>
+            <h2 className="font-heading font-black text-2xl text-white mb-1">
+              ICUP
+            </h2>
+            <p className="text-white/60 text-sm">Unidos en su Presencia</p>
+          </div>
+
+          {/* Navigation Links */}
+          <nav className="flex-1 space-y-2 overflow-y-auto">
+            {navLinks.map((link) => renderMobileNavLink(link))}
+          </nav>
+
+          {/* CTA Section */}
+          <div className="mt-6 pt-6 border-t border-white/10">
+            <p className="text-white/50 text-xs text-center mb-4 uppercase tracking-wider">
+              ¿Listo para visitarnos?
+            </p>
+            {isCalendarPage ? (
+              <Link
+                to="/#contacto"
+                className="block w-full py-4 px-6 bg-gradient-to-r from-gold-400 to-gold-500 text-white font-bold text-center rounded-2xl shadow-lg shadow-gold-500/30"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Únete a nosotros
+              </Link>
+            ) : (
+              <a
+                href="#contacto"
+                className="block w-full py-4 px-6 bg-gradient-to-r from-gold-400 to-gold-500 text-white font-bold text-center rounded-2xl shadow-lg shadow-gold-500/30"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Únete a nosotros
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

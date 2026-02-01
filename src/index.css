@@ -131,7 +131,13 @@ h6 {
     url("https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&q=80&w=1600");
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
+}
+
+/* Only use fixed background on desktop - causes scroll jank on mobile */
+@media (min-width: 769px) {
+  .bg-verse-dark {
+    background-attachment: fixed;
+  }
 }
 
 .gradient-accent {
