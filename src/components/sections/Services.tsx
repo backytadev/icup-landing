@@ -221,7 +221,7 @@ export default function Services() {
                       <Star size={14} className="text-gold-500" /> Acerca del
                       Servicio
                     </h4>
-                    <p className="text-neutral-600 leading-relaxed italic">
+                    <p className="text-sm md:text-base text-neutral-600 leading-relaxed italic">
                       "{selectedService.details}"
                     </p>
                   </div>
