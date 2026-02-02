@@ -40,35 +40,32 @@ export default function EventModal({ event, onClose }: EventModalProps) {
             className="relative w-full max-w-lg bg-white rounded-[2.5rem] overflow-hidden shadow-2xl max-h-[90vh] flex flex-col"
           >
             {/* Header */}
-            <div className="h-28 md:h-32 bg-gradient-to-br from-primary-600 to-primary-800 p-6 md:p-8 flex items-end relative shrink-0">
+            <div
+              className={`h-28 md:h-32 bg-gradient-to-br ${category.headerGradient} p-6 md:p-8 flex items-end relative shrink-0`}
+            >
               <button
                 onClick={onClose}
                 className="absolute top-4 md:top-6 right-4 md:right-6 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
               >
                 <X size={20} />
               </button>
-              <div className="flex items-center gap-4 text-white">
+              <div className="flex items-center gap-4 !text-white">
                 <div
-                  className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl backdrop-blur-md flex items-center justify-center ${category.bgColor}`}
+                  className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl backdrop-blur-md flex items-center justify-center bg-white/20`}
                 >
-                  <Calendar size={26} className={category.color} />
+                  <Calendar size={26} className="!text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xl md:text-2xl font-black">
+                  <h3 className="text-xl md:text-2xl font-black leading-tight !text-white">
                     {event.title}
                   </h3>
-                  <div className="flex items-center gap-2 text-white/80 text-sm font-medium">
-                    <span
-                      className={`
-                        inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold
-                        ${category.bgColor} ${category.color}
-                      `}
-                    >
+                  <div className="flex items-center gap-2 text-white/90 text-xs font-bold uppercase tracking-wider mt-1">
+                    <span className="px-2 py-0.5 rounded-full bg-white/20">
                       {category.label}
                     </span>
                     {event.isHighlighted && (
-                      <span className="flex items-center gap-1 text-gold-400">
-                        <Star size={12} className="fill-gold-400" />
+                      <span className="flex items-center gap-1 text-gold-300">
+                        <Star size={10} className="fill-gold-300" />
                         Destacado
                       </span>
                     )}
@@ -81,15 +78,19 @@ export default function EventModal({ event, onClose }: EventModalProps) {
             <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar">
               {/* Date and Time */}
               <div className="flex flex-wrap gap-3 mb-6">
-                <div className="flex items-center gap-2 text-primary-600 bg-primary-50 px-4 py-2 rounded-xl">
+                <div
+                  className={`flex items-center gap-2 ${category.color} ${category.bgColor} px-4 py-2 rounded-xl`}
+                >
                   <Calendar size={16} />
-                  <span className="font-semibold text-sm">
+                  <span className="font-bold text-xs md:text-sm">
                     {formatDate(event.date)}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 text-primary-600 bg-primary-50 px-4 py-2 rounded-xl">
+                <div
+                  className={`flex items-center gap-2 ${category.color} ${category.bgColor} px-4 py-2 rounded-xl`}
+                >
                   <Clock size={16} />
-                  <span className="font-semibold text-sm">
+                  <span className="font-bold text-xs md:text-sm">
                     {formatTime(event.startTime)} - {formatTime(event.endTime)}
                   </span>
                 </div>
@@ -98,33 +99,46 @@ export default function EventModal({ event, onClose }: EventModalProps) {
               <div className="space-y-6">
                 {/* Description */}
                 <div>
-                  <h4 className="flex items-center gap-2 text-neutral-800 font-bold mb-2 uppercase tracking-wider text-xs">
-                    <Star size={14} className="text-gold-500" /> Descripción
+                  <h4
+                    className="flex items-center gap-2 font-bold mb-2 uppercase tracking-widest text-[10px] md:text-xs"
+                    style={{
+                      color: `var(--color-${category.color.replace('text-', '')})`,
+                    }}
+                  >
+                    <Star size={14} className="fill-current" /> Descripción
                   </h4>
-                  <p className="text-neutral-600 leading-relaxed italic">
+                  <p className="text-neutral-600 leading-relaxed italic text-sm md:text-base">
                     "{event.description}"
                   </p>
                 </div>
 
                 {/* Location */}
                 <div>
-                  <h4 className="text-neutral-800 font-bold mb-2 uppercase tracking-wider text-xs">
-                    Ubicación
+                  <h4
+                    className="flex items-center gap-2 font-bold mb-2 uppercase tracking-widest text-[10px] md:text-xs"
+                    style={{
+                      color: `var(--color-${category.color.replace('text-', '')})`,
+                    }}
+                  >
+                    <MapPin size={14} /> Ubicación
                   </h4>
-                  <div className="flex items-start gap-2 text-neutral-600">
-                    <MapPin size={16} className="text-primary-500 mt-0.5 flex-shrink-0" />
-                    <span>{event.location}</span>
+                  <div className="flex items-start gap-2 text-neutral-600 text-sm md:text-base">
+                    <span className="leading-tight">{event.location}</span>
                   </div>
                 </div>
 
                 {/* Recurrence */}
                 {event.recurrence !== 'none' && (
                   <div>
-                    <h4 className="text-neutral-800 font-bold mb-2 uppercase tracking-wider text-xs">
-                      Frecuencia
+                    <h4
+                      className="flex items-center gap-2 font-bold mb-2 uppercase tracking-widest text-[10px] md:text-xs"
+                      style={{
+                        color: `var(--color-${category.color.replace('text-', '')})`,
+                      }}
+                    >
+                      <Repeat size={14} /> Frecuencia
                     </h4>
-                    <div className="flex items-center gap-2 text-neutral-600">
-                      <Repeat size={16} className="text-primary-500" />
+                    <div className="flex items-center gap-2 text-neutral-600 text-sm md:text-base">
                       <span>{recurrenceLabels[event.recurrence]}</span>
                     </div>
                   </div>
@@ -133,7 +147,7 @@ export default function EventModal({ event, onClose }: EventModalProps) {
 
               <button
                 onClick={onClose}
-                className="btn-primary w-full mt-8 py-4 shadow-lg shadow-primary-500/20"
+                className={`w-full mt-8 py-2 md:py-4 rounded-2xl font-bold text-white shadow-lg transition-all active:scale-95 bg-gradient-to-r ${category.headerGradient} hover:shadow-xl`}
               >
                 Entendido
               </button>

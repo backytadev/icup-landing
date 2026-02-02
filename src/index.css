@@ -318,6 +318,10 @@ h6 {
   width: 6px;
 }
 
+.custom-scrollbar {
+  overflow-x: hidden;
+}
+
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }

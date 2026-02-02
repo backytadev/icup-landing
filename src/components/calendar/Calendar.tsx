@@ -47,21 +47,22 @@ export default function Calendar() {
       </div>
 
       {/* Selected Day Events Panel */}
-      <div className="lg:col-span-1">
-        <div className="bg-white rounded-3xl p-6 shadow-soft border border-neutral-100 sticky top-28">
+      <div className="lg:col-span-1 w-full max-w-full overflow-hidden">
+        <div className="bg-white rounded-3xl p-6 shadow-soft border border-neutral-100 lg:sticky lg:top-28">
           {selectedDate ? (
             <div key={selectedDate.toISOString()}>
               <h3 className="font-bold text-lg text-primary-700 mb-4">
                 {formatDate(selectedDate.toISOString().split('T')[0])}
               </h3>
               {selectedDateEvents.length > 0 ? (
-                <div className="space-y-3 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
+                <div className="space-y-3 max-h-[60vh] overflow-y-auto overflow-x-hidden custom-scrollbar pr-2 -mr-2">
                   {selectedDateEvents.map((event) => (
-                    <EventCard
-                      key={event.id}
-                      event={event}
-                      onClick={() => setSelectedEvent(event)}
-                    />
+                    <div key={event.id} className="px-0.5 py-0.5">
+                      <EventCard
+                        event={event}
+                        onClick={() => setSelectedEvent(event)}
+                      />
+                    </div>
                   ))}
                 </div>
               ) : (
@@ -91,7 +92,10 @@ export default function Calendar() {
       </div>
 
       {/* Event Modal */}
-      <EventModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />
+      <EventModal
+        event={selectedEvent}
+        onClose={() => setSelectedEvent(null)}
+      />
     </div>
   );
 }

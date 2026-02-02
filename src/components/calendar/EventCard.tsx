@@ -19,8 +19,8 @@ export default function EventCard({
     <button
       onClick={onClick}
       className={`
-        w-full text-left p-4 rounded-2xl border-l-4 bg-white shadow-soft
-        cursor-pointer transition-shadow duration-150
+        w-full max-w-full text-left p-4 rounded-2xl border-l-4 bg-white shadow-soft
+        cursor-pointer transition-shadow duration-150 overflow-hidden
         md:hover:shadow-medium md:hover:-translate-y-0.5 md:active:translate-y-0
         md:transition-all md:duration-150
         ${category.borderColor}
@@ -41,10 +41,15 @@ export default function EventCard({
               <Star size={14} className="text-gold-500 fill-gold-500" />
             )}
           </div>
-          <h4 className="font-bold text-neutral-800 mb-1 truncate">
+          <h4
+            className="font-bold text-base md:text-lg mb-1 truncate"
+            style={{
+              color: `var(--color-${category.color.replace('text-', '')})`,
+            }}
+          >
             {event.title}
           </h4>
-          <p className="text-sm text-neutral-500 line-clamp-2">
+          <p className="text-xs md:text-sm text-neutral-500 line-clamp-2">
             {event.description}
           </p>
         </div>

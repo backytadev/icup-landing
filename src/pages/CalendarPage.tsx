@@ -42,8 +42,7 @@ export default function CalendarPage() {
               <span>ICUP - Calendario de Actividades</span>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4">
-              Calendario de{' '}
-              <span className="text-gold-400">Actividades</span>
+              Calendario de <span className="text-gold-400">Actividades</span>
             </h1>
             <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto">
               Conoce todas nuestras actividades, cultos y eventos especiales.
@@ -54,7 +53,7 @@ export default function CalendarPage() {
       </section>
 
       {/* Calendar Section */}
-      <section className="section bg-neutral-50">
+      <section className="section bg-neutral-50 overflow-x-hidden">
         <div className="container mx-auto px-6">
           {/* View Toggle */}
           <motion.div
@@ -108,7 +107,10 @@ export default function CalendarPage() {
       </section>
 
       {/* Event Modal for List View */}
-      <EventModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />
+      <EventModal
+        event={selectedEvent}
+        onClose={() => setSelectedEvent(null)}
+      />
     </div>
   );
 }

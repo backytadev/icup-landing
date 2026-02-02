@@ -40,4 +40,5 @@ export interface CategoryInfo {
   color: string;
   bgColor: string;
   borderColor: string;
+  headerGradient: string;
 }

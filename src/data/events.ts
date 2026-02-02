@@ -30,51 +30,59 @@ export const DAYS_FULL_ES = [
 export const CATEGORY_INFO: Record<EventCategory, CategoryInfo> = {
   culto: {
     label: 'Culto',
-    color: 'text-primary-700',
+    color: 'text-primary-600',
     bgColor: 'bg-primary-100',
     borderColor: 'border-primary-300',
+    headerGradient: 'from-primary-600 to-primary-800',
   },
   retiro: {
     label: 'Retiro',
-    color: 'text-purple-700',
+    color: 'text-purple-600',
     bgColor: 'bg-purple-100',
     borderColor: 'border-purple-300',
+    headerGradient: 'from-purple-600 to-purple-800',
   },
   reunion: {
     label: 'Reunión',
-    color: 'text-cyan-700',
+    color: 'text-cyan-600',
     bgColor: 'bg-cyan-100',
     borderColor: 'border-cyan-300',
+    headerGradient: 'from-cyan-600 to-cyan-800',
   },
   jovenes: {
     label: 'Jóvenes',
-    color: 'text-orange-700',
+    color: 'text-orange-600',
     bgColor: 'bg-orange-100',
     borderColor: 'border-orange-300',
+    headerGradient: 'from-orange-500 to-orange-700',
   },
   ninos: {
     label: 'Niños',
-    color: 'text-pink-700',
+    color: 'text-pink-600',
     bgColor: 'bg-pink-100',
     borderColor: 'border-pink-300',
+    headerGradient: 'from-pink-500 to-pink-700',
   },
   oracion: {
     label: 'Oración',
-    color: 'text-indigo-700',
+    color: 'text-indigo-600',
     bgColor: 'bg-indigo-100',
     borderColor: 'border-indigo-300',
+    headerGradient: 'from-indigo-600 to-indigo-800',
   },
   especial: {
     label: 'Especial',
-    color: 'text-gold-700',
+    color: 'text-gold-600',
     bgColor: 'bg-gold-100',
     borderColor: 'border-gold-300',
+    headerGradient: 'from-gold-500 to-gold-700',
   },
   ayuno: {
     label: 'Ayuno',
-    color: 'text-teal-700',
+    color: 'text-teal-600',
     bgColor: 'bg-teal-100',
     borderColor: 'border-teal-300',
+    headerGradient: 'from-teal-600 to-teal-800',
   },
 };
 
@@ -306,7 +314,7 @@ export function getEventsForYear(year: number): ChurchEvent[] {
 // Get events for a specific date
 export function getEventsForDate(
   date: Date,
-  events: ChurchEvent[]
+  events: ChurchEvent[],
 ): ChurchEvent[] {
   const dateString = date.toISOString().split('T')[0];
   return events
@@ -318,7 +326,7 @@ export function getEventsForDate(
 export function getUpcomingEvents(
   fromDate: Date,
   events: ChurchEvent[],
-  limit?: number
+  limit?: number,
 ): ChurchEvent[] {
   const fromDateString = fromDate.toISOString().split('T')[0];
   const upcoming = events
@@ -334,7 +342,7 @@ export function getUpcomingEvents(
 
 // Group events by month
 export function groupEventsByMonth(
-  events: ChurchEvent[]
+  events: ChurchEvent[],
 ): Record<string, ChurchEvent[]> {
   return events.reduce(
     (acc, event) => {
@@ -345,7 +353,7 @@ export function groupEventsByMonth(
       acc[monthKey].push(event);
       return acc;
     },
-    {} as Record<string, ChurchEvent[]>
+    {} as Record<string, ChurchEvent[]>,
   );
 }
 
